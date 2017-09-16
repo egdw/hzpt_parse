@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta name="apple-touch-fullscreen" content="yes"><!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<!-- 设置苹果工具栏颜色:默认值为 default，可以定为 black和 black-translucent-->
+<meta http-equiv="Cache-Control" content="no-siteapp"/><!-- 不让百度转码 -->
+<meta name="HandheldFriendly" content="true"><!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+<meta name="MobileOptimized" content="320"><!-- 微软的老式浏览器 -->
+<meta name="screen-orientation" content="portrait"><!-- uc强制竖屏 -->
+<meta name="x5-orientation" content="portrait"><!-- QQ强制竖屏 -->
+<meta name="browsermode" content="application"><!-- UC应用模式 -->
+<meta name="x5-page-mode" content="app"><!-- QQ应用模式 -->
+<meta name="msapplication-tap-highlight" content="no"><!-- windows phone 点击无高光 -->
+<head>
+    <meta charset="UTF-8">
+    <title>杭科院新闻网</title>
+</head>
+<link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+<link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+<link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+<link rel="stylesheet" href="/hzpt/css/index.css"/>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<link href="https://cdn.bootcss.com/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/sweetalert/1.1.3/sweetalert.min.js"></script>
+<script src="https://cdn.bootcss.com/lightbox2/2.9.0/js/lightbox.min.js"></script>
+<link href="https://cdn.bootcss.com/lightbox2/2.9.0/css/lightbox.min.css" rel="stylesheet">
+<body onload="onload()">
+<!-- page集合的容器，里面放多个平行的.page，其他.page作为内联页面由路由控制展示 -->
+<div class="page-group">
+    <!-- 单个page ,第一个.page默认被展示-->
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <a class="icon icon-menu pull-left open-panel"></a>
+            <h1 id="mainTitle" class="title">首页</h1>
+        </header>
+        <div class="bar bar-header-secondary">
+            <div class="searchbar">
+                <a onclick="searchNews(1)" href="javascript:void(0)" class="searchbar-cancel">搜!</a>
+                <div class="search-input">
+                    <label class="icon icon-search" for="search"></label>
+                    <input type="search" id='search' placeholder='输入关键字...'/>
+                </div>
+            </div>
+        </div>
+        <!-- 这里是页面内容区 -->
+        <div class="content " id="mainContent">
+            <div class="content-block" id="banner">
+            </div>
+        </div>
+    </div>
+
+    <!-- 其他的单个page内联页（如果有） -->
+    <div class="page">...</div>
+</div>
+
+<div class="panel-overlay"></div>
+<div class="panel panel-left panel-reveal">
+    <div class="content-block">
+        <!--<p><a href="#" class="close-panel">关闭</a></p>-->
+
+        <div class="content">
+            <div class="list-block cards-list">
+                <ul>
+                    <li class="card">
+                        <div class="card-header">导航</div>
+                        <div class="card-content">
+                            <div class="card-content-inner">
+                                <p onclick="changeList(0,1)">首页</p>
+                                <p onclick="changeList(441,1)">学院要闻</p>
+                                <p onclick="changeList(444,1)">信息通告</p>
+                                <p onclick="changeList(442,1)">综合新闻</p>
+                                <p onclick="changeList(443,1)">专题新闻</p>
+                                <p onclick="changeList(447,1)">视频新闻</p>
+                                <p onclick="changeList(451,1)">高职视野</p>
+                                <p onclick="changeList(446,1)">图片新闻</p>
+                                <!--<p onclick="changeList(1363,1)">校报校史</p>-->
+                                <p onclick="changeList(445,1)">媒体视角</p>
+                                <p onclick="changeList(449,1)">校园人物</p>
+                                <p onclick="changeList(448,1)">校园写意</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About Popup -->
+<div class="popup popup-about">
+    <div class="content-block">
+        <p><a href="#" class="close-popup">关闭窗口</a></p>
+        <div class="content-padded" id="popupContent">
+        </div>
+    </div>
+</div>
+<!-- 默认必须要执行$.init(),实际业务里一般不会在HTML文档里执行，通常是在业务页面代码的最后执行 -->
+</body>
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
+<script>
+    var cid = 0;
+    var pageVal = 1;
+
+    function searchNews(page) {
+
+        console.log($("#search").attr("value"))
+        $.ajax({
+            type: 'post',
+            url: 'find',
+            data: {find: $("#search").attr("value"), p: page},
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                $("#mainContent").html("");
+                $("#mainTitle").html(data.listTitle);
+                $.each(data.lists, function (index, content) {
+                    $("#mainContent").append("<div class='card'>" +
+                        "<div class='card-content'>" +
+                        "<div class='card-content-inner' onclick='detail(" + content.url + ")'>" + content.title + "</div>" +
+                        "  <div class='card-footer'>" + content.date + "</div></div>");
+                });
+                $("#mainContent").append("<center><input type='text' value='" + data.page + "/" + data.pageCount + "' width='100%' style='padding: 10px;text-align: center' id='picker'/></center>");
+                var arr = new Array(data.pageCount);
+                for (var i = 0; i < data.pageCount; i++) {
+                    arr[i] = i + 1;
+                }
+                $("#picker").picker({
+                    toolbarTemplate: '<header class="bar bar-nav">\
+                          <button class="button button-link pull-right close-picker" onclick="changeSearch()">确定</button>\
+                          <h1 class="title">页码</h1>\
+                          </header>',
+                    cols: [
+                        {
+                            textAlign: 'center',
+                            values: arr
+                        }
+                    ], formatValue: function (picker, value, displayValue) {
+                        pageVal = value[0];
+                    }
+                });
+            },
+            error: function (e) {
+                swal("OMG", "搜索失败了!", "error");
+            }
+        });
+    }
+
+    function changeSearch() {
+        searchNews(pageVal);
+        swal({
+            title: "Good!",
+            text: '加载了全新的一页~',
+            html: true,
+            timer: 1000,
+            showConfirmButton: true
+        });
+    }
+
+    function detail(id) {
+        $.ajax({
+            type: 'get',
+            url: 'detail',
+            data: {id: id},
+            dataType: 'json',
+            success: function (data) {
+                $("#popupContent").html("");
+                $("#popupContent").append(data.content);
+                $("p").attr('data-lightbox', 'image-1');
+                $.popup('.popup-about');
+            },
+            error: function (e) {
+                swal("OMG", "加载失败了!", "error");
+            }
+        });
+    }
+
+    function onload() {
+        $.ajax({
+            type: 'get',
+            url: 'banner',
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function (index, content) {
+                    $("#banner").append("<div class='card demo-card-header-pic'><div valign='bottom' class='card-header color-white no-border no-padding'>" +
+                        "<a onclick='detail(" + content.url + ")'><img class='card-cover'  rel='lightbox' src='" + content.imgUrl + "'  alt=''></a> " +
+                        "</div></div>");
+                });
+            },
+            error: function (e) {
+                swal("OMG", "加载失败了!", "error");
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'indexNews',
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function (index, content) {
+                    $("#mainContent").append("<div class='card'>" +
+                        "<div class='card-content'>" +
+                        "<div class='card-content-inner' onclick='detail(" + content.url + ")'>" + content.title + "</div>" +
+                        " <div class='card-footer'>" + content.date + "</div></div>");
+                });
+            },
+            error: function (e) {
+                swal("OMG", "加载失败了!", "error");
+            }
+        });
+    }
+
+    function changePage() {
+        changeList(cid, pageVal);
+        swal({
+            title: "Good!",
+            text: '加载了全新的一页~',
+            html: true,
+            timer: 1000,
+            showConfirmButton: true
+        });
+    }
+
+    function changeList(i, page) {
+        console.log(page);
+        if (i == 0) {
+            //说明是首页
+            parent.location.reload();
+        }
+        cid = i;
+        $.ajax({
+            type: 'get',
+            url: 'list',
+            data: {cid: cid, page: page},
+            dataType: 'json',
+            success: function (data) {
+                $("#mainContent").html("");
+                $("#mainTitle").html(data.listTitle);
+                $.each(data.lists, function (index, content) {
+                    $("#mainContent").append("<div class='card'>" +
+                        "<div class='card-content'>" +
+                        "<div class='card-content-inner' onclick='detail(" + content.url + ")'>" + content.title + "</div>" +
+                        "  <div class='card-footer'>" + content.date + "</div></div>");
+                });
+                $("#mainContent").append("<center><input type='text' value='" + data.page + "/" + data.pageCount + "' width='100%' style='padding: 10px;text-align: center' id='picker'/></center>");
+                var arr = new Array(data.pageCount);
+                for (var i = 0; i < data.pageCount; i++) {
+                    arr[i] = i + 1;
+                }
+                $("#picker").picker({
+                    toolbarTemplate: '<header class="bar bar-nav">\
+                          <button class="button button-link pull-right close-picker" onclick="changePage()">确定</button>\
+                          <h1 class="title">页码</h1>\
+                          </header>',
+                    cols: [
+                        {
+                            textAlign: 'center',
+                            values: arr
+                        }
+                    ], formatValue: function (picker, value, displayValue) {
+                        pageVal = value[0];
+                    }
+                });
+                swal({
+                    title: "Good!",
+                    text: '加载了全新的分类~',
+                    html: true,
+                    timer: 1000,
+                    showConfirmButton: true
+                });
+            },
+            error: function (e) {
+                swal("OMG", "加载失败了!请重试!", "error");
+            }
+        });
+    }
+</script>
+</html>
