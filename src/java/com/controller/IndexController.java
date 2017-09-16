@@ -18,8 +18,6 @@ import redis.clients.jedis.JedisPool;
 @RequestMapping("/")
 public class IndexController {
     @Autowired
-    private JedisPool jedisPool;
-    @Autowired
     private HzptUtils hzptUtils;
 
     @RequestMapping(method = RequestMethod.GET)

@@ -24,19 +24,19 @@ import java.util.ArrayList;
  */
 @Component
 public class HzptUtils {
-    @Autowired
-    private JedisPool jedisPool;
+//    @Autowired
+//    private JedisPool jedisPool;
 
     /**
      * 获取学院要点新闻
      */
     public String getBanner() {
-        Jedis jedis = jedisPool.getResource();
-        String banner = jedis.get("hzpt_getBanner");
-        if (banner != null) {
-            jedis.close();
-            return banner;
-        }
+//        Jedis jedis = jedisPool.getResource();
+//        String banner = jedis.get("hzpt_getBanner");
+//        if (banner != null) {
+////            jedis.close();
+//            return banner;
+//        }
         String get = NetUtils.get("http://www.hzpt.edu.cn/News/index.php");
         Document document =
                 Jsoup.parse(get);
@@ -52,9 +52,9 @@ public class HzptUtils {
                 list.add(new Banner("http://www.hzpt.edu.cn" + src.substring(2), attr));
             }
         }
-        jedis.set("hzpt_getBanner", JSON.toJSONString(list));
-        jedis.expire("hzpt_getBanner", 60 * 60 * 24);
-        jedis.close();
+//        jedis.set("hzpt_getBanner", JSON.toJSONString(list));
+//        jedis.expire("hzpt_getBanner", 60 * 60 * 24);
+//        jedis.close();
         return JSON.toJSONString(list);
     }
 
@@ -62,12 +62,12 @@ public class HzptUtils {
      * 获取首页的新闻
      */
     public String getIndexNews() {
-        Jedis jedis = jedisPool.getResource();
-        String banner = jedis.get("hzpt_getIndexNews");
-        if (banner != null) {
-            jedis.close();
-            return banner;
-        }
+//        Jedis jedis = jedisPool.getResource();
+//        String banner = jedis.get("hzpt_getIndexNews");
+//        if (banner != null) {
+////            jedis.close();
+//            return banner;
+//        }
         String get = NetUtils.get("http://www.hzpt.edu.cn/News/index.php");
         Document document =
                 Jsoup.parse(get);
@@ -84,9 +84,9 @@ public class HzptUtils {
                 list.add(smallNews);
             }
         }
-        jedis.set("hzpt_getIndexNews", JSON.toJSONString(list));
-        jedis.expire("hzpt_getIndexNews", 60 * 60 * 24);
-        jedis.close();
+//        jedis.set("hzpt_getIndexNews", JSON.toJSONString(list));
+//        jedis.expire("hzpt_getIndexNews", 60 * 60 * 24);
+//        jedis.close();
         return JSON.toJSONString(list);
     }
 
@@ -96,12 +96,12 @@ public class HzptUtils {
      * @param id
      */
     public String getPageText(String id) {
-        Jedis jedis = jedisPool.getResource();
-        String banner = jedis.get("hzpt_getPageText_" + id);
-        if (banner != null) {
-            jedis.close();
-            return banner;
-        }
+//        Jedis jedis = jedisPool.getResource();
+//        String banner = jedis.get("hzpt_getPageText_" + id);
+//        if (banner != null) {
+////            jedis.close();
+//            return banner;
+//        }
         String get = NetUtils.get("http://www.hzpt.edu.cn/News/index.php?action=newsDetail&id=" + id);
         Document document =
                 Jsoup.parse(get);
@@ -119,9 +119,9 @@ public class HzptUtils {
         //content当中的所有图片指向都要加上学校的域名
         content = content.replace("/uploadFile/", "http://www.hzpt.edu.cn/uploadFile/");
         Page page = new Page(list_tit, title, date, content);
-        jedis.set("hzpt_getPageText_" + id, JSON.toJSONString(list));
-        jedis.expire("hzpt_getPageText_" + id, 60 * 60 * 24);
-        jedis.close();
+//        jedis.set("hzpt_getPageText_" + id, JSON.toJSONString(list));
+//        jedis.expire("hzpt_getPageText_" + id, 60 * 60 * 24);
+//        jedis.close();
         return JSON.toJSONString(page);
     }
 
@@ -143,12 +143,12 @@ public class HzptUtils {
      * @param num
      */
     public String getList(String cid, Integer num) {
-        Jedis jedis = jedisPool.getResource();
-        String s = jedis.get("hzpt_getList_" + cid + "_" + num);
-        if (s != null) {
-            jedis.close();
-            return s;
-        }
+//        Jedis jedis = jedisPool.getResource();
+//        String s = jedis.get("hzpt_getList_" + cid + "_" + num);
+//        if (s != null) {
+////            jedis.close();
+//            return s;
+//        }
         //http://www.hzpt.edu.cn/News/index.php?action=newsList&pernums=15&cid=442&page=2
         String get = NetUtils.get("http://www.hzpt.edu.cn/News/index.php?action=newsList&pernums=15&cid=" + cid + "&page=" + num);
         Document document =
@@ -178,9 +178,9 @@ public class HzptUtils {
         //获取页数
         last = last.substring(last.lastIndexOf("page=") + 5);
         List list1 = new List(list_tit, news, Integer.valueOf(currentPage), Integer.valueOf(last));
-        jedis.set("hzpt_getList_" + cid + "_" + num, JSON.toJSONString(list));
-        jedis.expire("hzpt_getList_" + cid + "_" + num, 60 * 60 * 24);
-        jedis.close();
+//        jedis.set("hzpt_getList_" + cid + "_" + num, JSON.toJSONString(list));
+//        jedis.expire("hzpt_getList_" + cid + "_" + num, 60 * 60 * 24);
+//        jedis.close();
         return JSON.toJSONString(list1);
     }
 

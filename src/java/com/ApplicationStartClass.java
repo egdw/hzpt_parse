@@ -8,13 +8,13 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 /**
  * Created by hdy on 2017/9/16.
  */
+@SpringBootApplication
 //public class ApplicationStartClass {
 //
 //    public static void main(String[] args) {
 //        SpringApplication.run(ApplicationStartClass.class, args);
 //    }
 //}
-@SpringBootApplication
 public class ApplicationStartClass extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
